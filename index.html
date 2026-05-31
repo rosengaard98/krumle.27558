@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krumle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', serif;
+      background: #faf9f6;
+      color: #1a1a18;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .sheep {
+      font-size: 72px;
+      display: block;
+      margin-bottom: 1.25rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-size: 64px;
+      font-weight: 600;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .phonetic {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: #888780;
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+    }
+
+    .tagline {
+      font-style: italic;
+      font-size: 14px;
+      color: #b4b2a9;
+      margin-bottom: 3rem;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border: 1px solid #d3d1c7;
+      border-radius: 12px;
+      background: #fff;
+      cursor: pointer;
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      color: #1a1a18;
+      transition: background 0.15s, transform 0.1s, border-color 0.15s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #f1efe8;
+      border-color: #b4b2a9;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn.playing {
+      border-color: #1a1a18;
+      background: #1a1a18;
+      color: #faf9f6;
+    }
+
+    .btn-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-label {
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .btn-desc {
+      font-size: 13px;
+      font-style: italic;
+      color: #888780;
+    }
+
+    .btn.playing .btn-desc {
+      color: #b4b2a9;
+    }
+
+    .play-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #d3d1c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color 0.15s;
+    }
+
+    .btn.playing .play-icon {
+      border-color: #b4b2a9;
+    }
+
+    .play-icon svg {
+      width: 12px;
+      height: 12px;
+      fill: currentColor;
+      margin-left: 2px;
+    }
+
+    .btn.playing .play-icon svg {
+      fill: #faf9f6;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      color: #d3d1c7;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="sheep">🐑</span>
+    <h1>Krumle</h1>
+    <p class="phonetic">[ ˈkʁɔml̩ə ]</p>
+    <p class="tagline">et lam. et navn. en livsstil.</p>
+
+    <div class="buttons">
+      <button class="btn" onclick="play(this, 'normalt.mp3')">
+        <div class="btn-left">
+          <div class="play-icon">
+            <svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg>
+          </div>
+          <div>
+            <div class="btn-label">Normalt</div>
+            <div class="btn-desc">som man siger det til daglig</div>
+          </div>
+        </div>
+      </button>
+
+      <button class="btn" onclick="play(this, 'langsomt.mp3')">
+        <div class="btn-left">
+          <div class="play-icon">
+            <svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg>
+          </div>
+          <div>
+            <div class="btn-label">Langsomt</div>
+            <div class="btn-desc">stavelse for stavelse</div>
+          </div>
+        </div>
+      </button>
+
+      <button class="btn" onclick="play(this, 'entusiastisk.mp3')">
+        <div class="btn-left">
+          <div class="play-icon">
+            <svg viewBox="0 0 10 12"><polygon points="0,0 10,6 0,12"/></svg>
+          </div>
+          <div>
+            <div class="btn-label">Entusiastisk</div>
+            <div class="btn-desc">som når man møder ham første gang</div>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <p class="footer">FØLG KRUMLE PÅ INSTAGRAM</p>
+  </div>
+
+  <script>
+    let current = null;
+    let currentBtn = null;
+
+    function play(btn, file) {
+      if (current) {
+        current.pause();
+        current.currentTime = 0;
+        if (currentBtn) currentBtn.classList.remove('playing');
+        if (currentBtn === btn) { current = null; currentBtn = null; return; }
+      }
+      const audio = new Audio(file);
+      audio.play();
+      btn.classList.add('playing');
+      current = audio;
+      currentBtn = btn;
+      audio.onended = () => {
+        btn.classList.remove('playing');
+        current = null;
+        currentBtn = null;
+      };
+    }
+  </script>
+</body>
+</html>
